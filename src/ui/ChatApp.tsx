@@ -65,8 +65,14 @@ export default function ChatApp() {
     const trimmed = raw.trim();
     if (!trimmed) return '';
 
+    // Allow passing just host (no scheme)
+    let candidate = trimmed;
+    if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(candidate)) {
+      candidate = `wss://${candidate}`;
+    }
+
     // Allow giving https/http and convert to wss/ws.
-    let out = trimmed.replace(/^https:\/\//i, 'wss://').replace(/^http:\/\//i, 'ws://');
+    let out = candidate.replace(/^https:\/\//i, 'wss://').replace(/^http:\/\//i, 'ws://');
 
     // If user passed just origin (no path), default to /ws
     try {
