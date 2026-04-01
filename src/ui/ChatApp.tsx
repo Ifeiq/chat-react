@@ -59,21 +59,49 @@ export default function ChatApp() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
+  const lastConnMsgAtRef = useRef(0);
+
+  function normalizeWsUrl(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) return '';
+
+    // Allow giving https/http and convert to wss/ws.
+    let out = trimmed.replace(/^https:\/\//i, 'wss://').replace(/^http:\/\//i, 'ws://');
+
+    // If user passed just origin (no path), default to /ws
+    try {
+      const u = new URL(out);
+      if (u.pathname === '/' || u.pathname === '') u.pathname = '/ws';
+      out = u.toString();
+    } catch {
+      // keep as-is
+    }
+
+    return out;
+  }
+
   const wsUrl = useMemo(() => {
     // Dev local: `astro dev` (4321+auto) + `wrangler dev` (8787)
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
       return `ws://localhost:8787/ws?room=${encodeURIComponent(ROOM)}`;
     }
 
-    const fromEnv = import.meta.env.PUBLIC_WS_URL as string | undefined;
-    if (fromEnv && fromEnv.trim()) {
-      const base = fromEnv.replace(/\/+$/, '');
+    // Quick override for testing without rebuild:
+    // https://site.pages.dev/?ws=wss://chat-ws.<sub>.workers.dev/ws
+    const fromQuery = new URLSearchParams(location.search).get('ws');
+    if (fromQuery && fromQuery.trim()) {
+      const base = normalizeWsUrl(fromQuery).replace(/\/+$/, '');
       return `${base}?room=${encodeURIComponent(ROOM)}`;
     }
 
-    // Fallback: if você colocar um domínio custom e rotear /ws pro Worker, isso funciona.
-    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-    return `${proto}://${location.host}/ws?room=${encodeURIComponent(ROOM)}`;
+    const fromEnv = (import.meta.env.PUBLIC_WS_URL as string | undefined) ?? '';
+    if (fromEnv.trim()) {
+      const base = normalizeWsUrl(fromEnv).replace(/\/+$/, '');
+      return `${base}?room=${encodeURIComponent(ROOM)}`;
+    }
+
+    // No configured WS in production -> return empty and show actionable error.
+    return '';
   }, []);
 
   useEffect(() => {
@@ -104,6 +132,10 @@ export default function ChatApp() {
   function connect(nextName: string) {
     const safe = clampName(nextName);
     if (!safe) return;
+    if (!wsUrl) {
+      pushSystem('WebSocket não configurado. Defina PUBLIC_WS_URL no Pages (ex: wss://chat-ws.<sub>.workers.dev/ws) e faça um novo deploy.');
+      return;
+    }
 
     setConnecting(true);
     setConnected(false);
@@ -124,13 +156,21 @@ export default function ChatApp() {
     ws.addEventListener('close', () => {
       setConnected(false);
       setConnecting(false);
-      pushSystem('Desconectado.');
+      const now = Date.now();
+      if (now - lastConnMsgAtRef.current > 1200) {
+        lastConnMsgAtRef.current = now;
+        pushSystem('Desconectado.');
+      }
     });
 
     ws.addEventListener('error', () => {
       setConnected(false);
       setConnecting(false);
-      pushSystem('Erro de conexão.');
+      const now = Date.now();
+      if (now - lastConnMsgAtRef.current > 1200) {
+        lastConnMsgAtRef.current = now;
+        pushSystem('Erro de conexão.');
+      }
     });
 
     ws.addEventListener('message', (evt) => {
