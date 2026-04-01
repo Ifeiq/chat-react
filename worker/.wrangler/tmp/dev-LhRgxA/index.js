@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// functions/_worker.js
+// src/index.js
 function jsonResponse(data, init) {
   return new Response(JSON.stringify(data, null, 2), {
     ...init,
@@ -44,7 +44,7 @@ var worker = {
     return new Response("Not found", { status: 404 });
   }
 };
-var worker_default = worker;
+var src_default = worker;
 var ChatRoom = class {
   static {
     __name(this, "ChatRoom");
@@ -159,7 +159,7 @@ var ChatRoom = class {
   }
 };
 
-// node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+// ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
 var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -177,7 +177,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
 
-// node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+// ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
 function reduceError(e) {
   return {
     name: e?.name,
@@ -200,14 +200,14 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-hulfIz/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-hGiDIg/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
-var middleware_insertion_facade_default = worker_default;
+var middleware_insertion_facade_default = src_default;
 
-// node_modules/wrangler/templates/middleware/common.ts
+// ../node_modules/wrangler/templates/middleware/common.ts
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -232,7 +232,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-hulfIz/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-hGiDIg/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -333,4 +333,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=_worker.js.map
+//# sourceMappingURL=index.js.map

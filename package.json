@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "dev:cf": "concurrently -k -n astro,cf -c cyan,magenta \"astro dev\" \"wrangler dev --local --persist-to .wrangler/state --port 8787\"",
+    "dev:cf": "concurrently -k -n astro,ws -c cyan,magenta \"astro dev\" \"wrangler dev --cwd worker --local --persist-to ../.wrangler/state --port 8787\"",
+    "dev:ws": "wrangler dev --cwd worker --local --persist-to ../.wrangler/state --port 8787",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

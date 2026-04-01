@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./env').Env} Env
+ * @typedef {{ CHAT_ROOM: DurableObjectNamespace }} Env
  */
 
 /**
@@ -53,7 +53,7 @@ function isProbablyDataUrl(s) {
   return typeof s === 'string' && s.startsWith('data:image/') && s.includes(';base64,');
 }
 
-const MAX_IMAGE_CHARS = 450_000; // ~330KB base64 payload (rough), keeps WS safe
+const MAX_IMAGE_CHARS = 450_000; // ~330KB base64 payload (rough)
 
 /** @type {ExportedHandler<Env>} */
 const worker = {
@@ -158,6 +158,7 @@ export class ChatRoom {
     if (msg.type === 'message') {
       const text = safeText(msg.text);
       if (!text) return;
+
       /** @type {ServerEvent} */
       const payload = {
         type: 'message',

@@ -1,9 +1,6 @@
-name = "chat"
+name = "chat-ws"
 compatibility_date = "2026-03-01"
-
-# Cloudflare Pages will serve the static build output in ./dist
-pages_build_output_dir = "dist"
-main = "functions/_worker.js"
+main = "src/index.js"
 
 [durable_objects]
 bindings = [{ name = "CHAT_ROOM", class_name = "ChatRoom" }]

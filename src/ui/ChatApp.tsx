@@ -65,6 +65,13 @@ export default function ChatApp() {
       return `ws://localhost:8787/ws?room=${encodeURIComponent(ROOM)}`;
     }
 
+    const fromEnv = import.meta.env.PUBLIC_WS_URL as string | undefined;
+    if (fromEnv && fromEnv.trim()) {
+      const base = fromEnv.replace(/\/+$/, '');
+      return `${base}?room=${encodeURIComponent(ROOM)}`;
+    }
+
+    // Fallback: if você colocar um domínio custom e rotear /ws pro Worker, isso funciona.
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     return `${proto}://${location.host}/ws?room=${encodeURIComponent(ROOM)}`;
   }, []);
