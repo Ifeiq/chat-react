@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# legacy/duplicate project folder
+astro-app/
+
 # macOS-specific files
 .DS_Store
 

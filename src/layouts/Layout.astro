@@ -1,14 +1,25 @@
+---
+import '../styles/global.css';
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Chat</title>
 	</head>
-	<body>
+	<body class="min-h-dvh bg-slate-950 text-slate-100 antialiased selection:bg-fuchsia-500/30 selection:text-slate-50">
+		<div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
+			<div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-950"></div>
+			<div class="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-fuchsia-500/12 blur-3xl"></div>
+			<div class="absolute top-40 -left-40 h-[520px] w-[520px] rounded-full bg-indigo-500/12 blur-3xl"></div>
+			<div class="absolute bottom-[-200px] right-[-200px] h-[620px] w-[620px] rounded-full bg-pink-500/10 blur-3xl"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-20%,rgba(99,102,241,0.18),transparent_55%)]"></div>
+		</div>
 		<slot />
 	</body>
 </html>
